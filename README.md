@@ -1,7 +1,7 @@
 # control_emission
 
 This is an Hybrid app developed in flutter framework.
-A Tracking System in which users can register and track all the trips of their trips including the map routes.
+A Tracking System in which users can register and track all the trips of vehicles with the help of map routes.
 
 It includes the followings:
 
