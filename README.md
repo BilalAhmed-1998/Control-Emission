@@ -1,6 +1,17 @@
 # control_emission
 
-A new Flutter project.
+This is an Hybrid app developed in flutter framework.
+A Tracking System in which users can register and track all the trips of their trips including the map routes.
+
+It includes the followings:
+
+1, Sign Up/ Login
+2, Firebase Authentication.
+3, Vehicle Registration.
+4, Trip Start/End.
+5, Google Map Integration.
+6, Different APIs integration for tracking purposes.
+
 
 ## Getting Started
 
