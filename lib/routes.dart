@@ -1,7 +1,12 @@
-
+import 'package:control_emission/screens/home_page.dart';
+import 'package:control_emission/screens/login_page.dart';
+import 'package:control_emission/screens/optional_registration_page.dart';
+import 'package:control_emission/screens/signup_page.dart';
 import 'package:flutter/material.dart';
 
 final Map<String, WidgetBuilder> routes = {
-  // homePage.routeName: (context) => homePage(),
-
+  HomePage.routeName: (context) => HomePage(),
+  LoginPage.routeName: (context) => LoginPage(),
+  SignUpPage.routeName: (context) => SignUpPage(),
+  OptionalRegistrationPage.routeName: (context) => OptionalRegistrationPage(),
 };
