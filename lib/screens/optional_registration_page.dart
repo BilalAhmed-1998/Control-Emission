@@ -1,4 +1,5 @@
 import 'package:control_emission/screens/home_page.dart';
+import 'package:control_emission/screens/vehicle_registration_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -95,6 +96,7 @@ class OptionalRegistrationPage extends StatelessWidget {
                   ),
                   InkWell(
                     onTap: (){
+                      Navigator.pushNamed(context, VehicleRegistrationPage.routeName);
 
                     },
                     child: Container(
@@ -107,7 +109,7 @@ class OptionalRegistrationPage extends StatelessWidget {
                       width: 152,
                       height: 44,
                       child: Text(
-                        'Register',
+                        'Register Vehicle',
                         style: TextStyle(
                             fontSize: 16,
                             color: Colors.black,

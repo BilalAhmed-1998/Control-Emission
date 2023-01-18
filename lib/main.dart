@@ -16,15 +16,11 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'Control Emission',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-        fontFamily: 'regular'
-      ),
-      routes: routes,
-      home: SplashScreen(
-        duration: 1,
-        goToPage: LoginPage.routeName,
-      )
-    );
+        theme: ThemeData(primarySwatch: Colors.blue, fontFamily: 'regular'),
+        routes: routes,
+        home: SplashScreen(
+          duration: 2,
+          goToPage: LoginPage.routeName,
+        ));
   }
 }
