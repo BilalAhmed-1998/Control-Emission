@@ -1,20 +1,31 @@
 import 'package:control_emission/classes/Vehicle.dart';
+import 'package:control_emission/screens/new_trip_map_page.dart';
 import 'package:control_emission/screens/trips_page.dart';
 import 'package:control_emission/widgets/custom_alert_dialog.dart';
 import 'package:control_emission/widgets/signin_button.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import '../services/location_service.dart';
 import 'circular_progress_card.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
-class VehicleCard extends StatelessWidget {
+import 'loading_card.dart';
+
+
+
+class VehicleCard extends StatefulWidget {
   Vehicle vehicle;
 
   VehicleCard({Key key, this.vehicle}) : super(key: key);
 
   @override
+  State<VehicleCard> createState() => _VehicleCardState();
+}
+
+class _VehicleCardState extends State<VehicleCard> {
+  @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
-    double height = MediaQuery.of(context).size.height;
 
     return Container(
       decoration: BoxDecoration(
@@ -44,7 +55,7 @@ class VehicleCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      vehicle.company,
+                      widget.vehicle.company,
                       style: TextStyle(
                         color: Colors.grey.shade800,
                         fontSize: 15,
@@ -52,7 +63,7 @@ class VehicleCard extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      vehicle.registrationNo,
+                      widget.vehicle.registrationNo,
                       style: TextStyle(
                         color: Colors.grey.shade600,
                         fontSize: 12,
@@ -67,7 +78,7 @@ class VehicleCard extends StatelessWidget {
             CircularProgressCard(
               width: 32,
               height: 32,
-              val: vehicle.totalTrips / 5,
+              val: widget.vehicle.totalTrips / 5,
             )
           ]),
           Row(
@@ -75,7 +86,7 @@ class VehicleCard extends StatelessWidget {
             mainAxisSize: MainAxisSize.max,
             children: [
               Text(
-                'Total Trips: ${vehicle.totalTrips}',
+                'Total Trips: ${widget.vehicle.totalTrips}',
                 style: TextStyle(
                     color: Colors.grey.shade800,
                     fontSize: 12,
@@ -88,7 +99,7 @@ class VehicleCard extends StatelessWidget {
                       showDialog(
                           context: context,
                           builder: (BuildContext context) => CustomAlertDialog(
-                                vehicle: vehicle,
+                                vehicle: widget.vehicle,
                               ));
                     },
                     child: Container(
@@ -111,14 +122,17 @@ class VehicleCard extends StatelessWidget {
                   InkWell(
                     onTap: () {
                       showModalBottomSheet(
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.vertical(top: Radius.circular(25.0))),
                           context: context,
+                          isScrollControlled: true,
                           builder: (context) {
                             return Container(
                               decoration: BoxDecoration(
                                 color: Colors.white,
                                 borderRadius: BorderRadius.only(
-                                  topRight: Radius.circular(10),
-                                  topLeft: Radius.circular(10),
+                                  topRight: Radius.circular(25),
+                                  topLeft: Radius.circular(25),
                                 ),
                               ),
                               width: width,
@@ -131,7 +145,7 @@ class VehicleCard extends StatelessWidget {
                                         CrossAxisAlignment.start,
                                     children: [
                                       Text(
-                                        vehicle.company,
+                                        widget.vehicle.company,
                                         textAlign: TextAlign.center,
                                         style: TextStyle(
                                           color: Colors.grey.shade800,
@@ -140,7 +154,7 @@ class VehicleCard extends StatelessWidget {
                                         ),
                                       ),
                                       Text(
-                                        vehicle.registrationNo,
+                                        widget.vehicle.registrationNo,
                                         textAlign: TextAlign.center,
                                         style: TextStyle(
                                           color: Colors.grey.shade600,
@@ -155,7 +169,31 @@ class VehicleCard extends StatelessWidget {
                                     height: 10,
                                   ),
                                   InkWell(
-                                    onTap: () {},
+                                    onTap: () async{
+
+                                      showDialog(
+                                          context: context,
+                                          builder: (BuildContext context) => LoadingCard(
+                                            text: "Fetching location...",
+                                          ));
+
+                                      Position currentCoordinates = await LocationService.determinePosition(context);
+                                      if (!mounted) return;
+                                      if(currentCoordinates!=null ) {
+
+
+                                        Navigator.pushReplacement(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) => NewTripMapPage(
+                                                  vehicleDocId: widget.vehicle.docId,
+                                                  currentCoordinates: LatLng(currentCoordinates.latitude, currentCoordinates.longitude),
+                                                )
+
+                                            ));
+                                      }
+
+                                    },
                                     child: SignInButton(
                                       width: width,
                                       height: 56,
@@ -167,11 +205,11 @@ class VehicleCard extends StatelessWidget {
                                   ),
                                   InkWell(
                                     onTap: () {
-                                      Navigator.push(
+                                      Navigator.pushReplacement(
                                           context,
                                           MaterialPageRoute(
                                               builder: (context) => TripsPage(
-                                                    vehicle: vehicle,
+                                                    vehicle: widget.vehicle,
                                                   )));
                                     },
                                     child: SignInButton(
@@ -179,6 +217,9 @@ class VehicleCard extends StatelessWidget {
                                       height: 56,
                                       text: 'View Previous Trips',
                                     ),
+                                  ),
+                                  SizedBox(
+                                    height: 30,
                                   ),
                                 ],
                               ),

@@ -1,6 +1,12 @@
 import 'package:control_emission/screens/optional_registration_page.dart';
+import 'package:control_emission/services/firestore_database.dart';
 import 'package:control_emission/widgets/signin_button.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+
+import '../cards/loading_card.dart';
+import '../services/auth_service.dart';
 
 class SignUpPage extends StatefulWidget {
   static const routeName = '/SignUpPage';
@@ -14,23 +20,23 @@ class SignUpPage extends StatefulWidget {
 
 class _SignUpPageState extends State<SignUpPage> {
   TextEditingController emailController = TextEditingController();
+  TextEditingController nameController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
+  TextEditingController confirmPasswordController = TextEditingController();
   bool obscured = true;
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
-    double height = MediaQuery.of(context).size.height;
     return Scaffold(
       body: SingleChildScrollView(
         child: Container(
           width: width,
-          height: height,
           padding: EdgeInsets.symmetric(horizontal: 25, vertical: 20),
           color: Colors.white,
           child: Column(
             children: [
               SizedBox(
-                height: 90,
+                height: 70,
               ),
               SizedBox(
                 height: 200,
@@ -41,6 +47,39 @@ class _SignUpPageState extends State<SignUpPage> {
               ),
               SizedBox(
                 height: 50,
+              ),
+              ///name field///
+              Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(8),
+                  color: Colors.white,
+                ),
+                child: TextField(
+                  controller: nameController,
+                  keyboardType: TextInputType.name,
+                  decoration: InputDecoration(
+                      hoverColor: Colors.white,
+                      focusColor: Colors.white,
+                      fillColor: Colors.transparent,
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8),
+                        borderSide:
+                        BorderSide(color: Color(0xff004040), width: 1.5),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderSide:
+                        BorderSide(color: Colors.grey.shade300, width: 1.5),
+                      ),
+                      hintText: 'Enter Name',
+                      hintStyle: TextStyle(
+                        fontSize: 16,
+                        fontStyle: FontStyle.italic,
+                        color: Colors.grey.withOpacity(0.7),
+                      )),
+                ),
+              ),
+              SizedBox(
+                height: 16,
               ),
               ///email field///
               Container(
@@ -130,7 +169,7 @@ class _SignUpPageState extends State<SignUpPage> {
                   color: Colors.white,
                 ),
                 child: TextField(
-                  controller: passwordController,
+                  controller: confirmPasswordController,
                   obscureText: obscured,
                   keyboardType: TextInputType.emailAddress,
                   decoration: InputDecoration(
@@ -174,62 +213,12 @@ class _SignUpPageState extends State<SignUpPage> {
               InkWell(
                 enableFeedback: true,
                 onTap: () async {
-                  Navigator.pushNamed(context, OptionalRegistrationPage.routeName);
-                  // bool emailValid = RegExp(
-                  //     r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
-                  //     .hasMatch(emailController.text);
-                  // bool passValid =
-                  // RegExp("^.{8,}\$").hasMatch(passwordController.text);
-                  //
-                  // if (emailValid &&
-                  //     passValid &&
-                  //     FirebaseAuth.instance.currentUser == null) {
-                  //   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                  //       duration: Duration(seconds: 1),
-                  //       content: Row(
-                  //         children: const [
-                  //           SizedBox(
-                  //             width: 20,
-                  //           ),
-                  //           CircularProgressIndicator.adaptive(
-                  //             backgroundColor: Color(0xff23A6F0),
-                  //           ),
-                  //           SizedBox(
-                  //             width: 20,
-                  //           ),
-                  //           Text(
-                  //             "Signing Up...",
-                  //             style: TextStyle(
-                  //               color: Colors.black,
-                  //               fontSize: 18,
-                  //               fontWeight: FontWeight.bold,
-                  //             ),
-                  //           ),
-                  //         ],
-                  //       )));
-                  //
-                  //   await AuthService().signUpWithEmailPassword(
-                  //       context, emailController.text, passwordController.text);
-                  //   await FirebaseAuth.instance.currentUser
-                  //       .sendEmailVerification();
-                  //   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                  //       content: Text("a verification email has been sent!")));
-                  //   if(FirebaseAuth.instance.currentUser!=null){
-                  //     Navigator.pushNamed(context, BmiCalculatorPage.routeName);
-                  //
-                  //   }
-                  // } else {
-                  //   (!emailValid)
-                  //       ? ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                  //     content: Text('Invalid EMAIL'),
-                  //   ))
-                  //       : ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                  //     content: Text('Successful!'),
-                  //   ));
-                  // }
+
+                  signingUpProtocol();
+
                 },
                 child: SignInButton(
-                  width: 342,
+                  width: width,
                   height: 56,
                   text: 'Sign Up',
                 )
@@ -261,10 +250,59 @@ class _SignUpPageState extends State<SignUpPage> {
                   ),
                 ],
               ),
+              SizedBox(
+                height: 50,
+              ),
             ],
           ),
         ),
       ),
     );
+  }
+
+  void signingUpProtocol () async{
+    bool emailValid = RegExp(
+        r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+        .hasMatch(emailController.text);
+    bool passValid =
+    RegExp("^.{8,}\$").hasMatch(passwordController.text);
+
+    if (emailValid && passValid && nameController.text.isNotEmpty && FirebaseAuth.instance.currentUser == null) {
+      AuthService().customSnackBarMessenger(context, 'Signing Up...');
+      await AuthService().signUpWithEmailPassword(
+          context, emailController.text, passwordController.text,nameController.text);
+
+      if(FirebaseAuth.instance.currentUser!=null){
+
+        showDialog(
+            context: context,
+            builder: (BuildContext context) => LoadingCard(
+              text: "Creating New User",
+            ));
+        if (!mounted) return;
+        await FireStoreDatabase.createNewUser(context);
+        if (!mounted) return;
+        Navigator.popAndPushNamed(context, OptionalRegistrationPage.routeName);
+      }
+    }else if (passwordController.text != confirmPasswordController.text){
+
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text('Your password is not matching!')));
+    }
+    else if ( nameController.text.isEmpty){
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text('Please enter your name!')));
+
+    }
+    else {
+      (!emailValid)
+          ? ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text('Please enter a valid email.'),
+      ))
+          : ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text('Please enter min 8 digit password!'),
+      ));
+    }
+
   }
 }

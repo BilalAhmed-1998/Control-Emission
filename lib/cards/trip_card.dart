@@ -6,7 +6,8 @@ import 'package:intl/intl.dart';
 
 class TripCard extends StatelessWidget {
 
-  String startingAddress,endingAddress,carName,duration,distance,registrationNo,fuelType;
+  String startingAddress,endingAddress,carName,duration,registrationNo,fuelType;
+  double distance;
   DateTime dateTime;
   int circularProgressVal;
 
@@ -174,7 +175,7 @@ class TripCard extends StatelessWidget {
                 Column(
                   children:  [
                     Text(
-                      '$distance km',
+                      '${distance.toStringAsFixed(1)} km',
                       style: TextStyle(
                           color: Color(0xffdddddd),
                           fontSize: 18,

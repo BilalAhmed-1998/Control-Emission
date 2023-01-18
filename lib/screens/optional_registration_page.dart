@@ -3,6 +3,8 @@ import 'package:control_emission/screens/vehicle_registration_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
+import '../cards/auto_vehicle_registration_card.dart';
+
 class OptionalRegistrationPage extends StatelessWidget {
   static const routeName = '/OptionalRegistrationPage';
 
@@ -96,8 +98,14 @@ class OptionalRegistrationPage extends StatelessWidget {
                   ),
                   InkWell(
                     onTap: (){
-                      Navigator.pushNamed(context, VehicleRegistrationPage.routeName);
-
+                      showModalBottomSheet(
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.vertical(top: Radius.circular(25.0))),
+                          context: context,
+                          isScrollControlled: true,
+                          builder: (context) {
+                            return AutoVehicleRegistrationCard();
+                          });
                     },
                     child: Container(
                       margin: EdgeInsets.only(top: 35),

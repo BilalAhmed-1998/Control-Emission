@@ -1,8 +1,6 @@
-
-
 class Vehicle {
   double co2Km, co2M;
-  String fuelType, make, company, registrationNo;
+  String fuelType, make, company, registrationNo, docId;
   int yearOfManufacture, totalTrips;
 
   Vehicle(
@@ -13,5 +11,6 @@ class Vehicle {
       this.make,
       this.yearOfManufacture,
       this.registrationNo,
-      this.totalTrips});
+      this.docId = '',
+      this.totalTrips = 0});
 }

@@ -1,5 +1,8 @@
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+
 class Trip {
-  String startingAddress, endingAddress,duration;
+  LatLng startingCoordinates, endingCoordinates;
+  String startingAddress, endingAddress, duration, encodedPoints;
   double distance;
   DateTime startingTime, endingTime;
 
@@ -9,5 +12,8 @@ class Trip {
       this.endingAddress,
       this.startingAddress,
       this.endingTime,
-      this.startingTime});
+      this.startingTime,
+      this.encodedPoints,
+      this.endingCoordinates,
+      this.startingCoordinates});
 }
