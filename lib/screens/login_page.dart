@@ -3,6 +3,11 @@ import 'package:control_emission/widgets/signin_button.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+
+
+import '../services/auth_service.dart';
+import 'home_page.dart';
 
 
 class LoginPage extends StatefulWidget {
@@ -27,7 +32,6 @@ class _LoginPageState extends State<LoginPage> {
       body: SingleChildScrollView(
         child: Container(
           width: width,
-          height: height,
           padding: EdgeInsets.symmetric(horizontal: 25, vertical: 40),
           color: Colors.white,
           child: Column(
@@ -89,6 +93,7 @@ class _LoginPageState extends State<LoginPage> {
               SizedBox(
                 height: 16,
               ),
+
               ///Password field///
               Container(
                 decoration: BoxDecoration(
@@ -141,33 +146,34 @@ class _LoginPageState extends State<LoginPage> {
               ),
               InkWell(
                 onTap: () async {
-                  // emailText = emailController.text;
-                  // bool emailValid = RegExp(
-                  //     r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
-                  //     .hasMatch(emailText);
-                  //
-                  // if (emailText != "" && emailValid) {
-                  //   final list = await FirebaseAuth.instance
-                  //       .fetchSignInMethodsForEmail(emailText);
-                  //   if (list.isNotEmpty) {
-                  //     try {
-                  //       FirebaseAuth.instance.sendPasswordResetEmail(
-                  //           email: emailController.text);
-                  //       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                  //           content: Text(
-                  //               "A link has been sent to your email successfully!")));
-                  //     } on Exception catch (e) {
-                  //       ScaffoldMessenger.of(context).showSnackBar(
-                  //           SnackBar(content: Text(e.toString())));
-                  //     }
-                  //   } else {
-                  //     ScaffoldMessenger.of(context).showSnackBar(
-                  //         SnackBar(content: Text("User not found!")));
-                  //   }
-                  // } else {
-                  //   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                  //       content: Text("Email Field is empty/invalid!")));
-                  // }
+                  emailText = emailController.text;
+                  bool emailValid = RegExp(
+                      r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+                      .hasMatch(emailText);
+
+                  if (emailText != "" && emailValid) {
+                    final list = await FirebaseAuth.instance
+                        .fetchSignInMethodsForEmail(emailText);
+                    if (!mounted) return;
+                    if (list.isNotEmpty) {
+                      try {
+                        FirebaseAuth.instance.sendPasswordResetEmail(
+                            email: emailController.text);
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                            content: Text(
+                                "A link has been sent to your email successfully!")));
+                      } on Exception catch (e) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text(e.toString())));
+                      }
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text("User not found!")));
+                    }
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                        content: Text("Email Field is empty/invalid!")));
+                  }
                 },
                 child: Container(
                   alignment: Alignment.centerLeft,
@@ -186,40 +192,18 @@ class _LoginPageState extends State<LoginPage> {
               InkWell(
                 enableFeedback: true,
                 onTap: () async {
-                  // ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                  //     duration: Duration(seconds: 1),
-                  //     content: Row(
-                  //       children: const [
-                  //         SizedBox(
-                  //           width: 20,
-                  //         ),
-                  //         CircularProgressIndicator.adaptive(
-                  //           backgroundColor: Color(0xff23A6F0),
-                  //         ),
-                  //         SizedBox(
-                  //           width: 20,
-                  //         ),
-                  //         Text(
-                  //           "Signing In...",
-                  //           style: TextStyle(
-                  //             color: Colors.white,
-                  //             fontSize: 18,
-                  //             fontWeight: FontWeight.bold,
-                  //           ),
-                  //         ),
-                  //       ],
-                  //     )));
-                  // await AuthService().signInWithEmailPassword(
-                  //     context, emailController.text, passwordController.text);
-                  // if (FirebaseAuth.instance.currentUser != null) {
-                  //
-                  //
-                  //
-                  //   Navigator.pushNamed(context, homePage.routeName);
-                  // }
+
+                  AuthService().customSnackBarMessenger(context, 'Signing In...');
+                  await AuthService().signInWithEmailPassword(
+                      context, emailController.text, passwordController.text);
+                  if (!mounted) return;
+                  if (FirebaseAuth.instance.currentUser != null) {
+
+                   Navigator.pushNamed(context, HomePage.routeName);
+                  }
                 },
                 child: SignInButton(
-                  width: 342,
+                  width: width,
                   height: 56,
                   text: 'Sign In',
                 )

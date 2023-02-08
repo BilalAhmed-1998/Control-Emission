@@ -1,7 +1,11 @@
+import 'package:control_emission/classes/vehicle.dart';
 import 'package:control_emission/screens/home_page.dart';
+import 'package:control_emission/services/firestore_database.dart';
 import 'package:control_emission/widgets/custom_app_bar.dart';
 import 'package:control_emission/widgets/signin_button.dart';
 import 'package:flutter/material.dart';
+
+import '../cards/loading_card.dart';
 
 class VehicleRegistrationPage extends StatefulWidget {
   static const routeName = '/VehicleRegistrationPage';
@@ -33,7 +37,7 @@ class _VehicleRegistrationPageState extends State<VehicleRegistrationPage> {
       backgroundColor: Colors.white,
       body: SingleChildScrollView(
         child: Container(
-          padding: EdgeInsets.only(top: 60, left: 20, right: 20,bottom: 20),
+          padding: EdgeInsets.only(top: 60, left: 20, right: 20, bottom: 20),
           width: width,
           color: Colors.white,
           child: Form(
@@ -89,7 +93,8 @@ class _VehicleRegistrationPageState extends State<VehicleRegistrationPage> {
                   decoration: InputDecoration(
                     label: Text(' Enter number'),
                     labelStyle: TextStyle(
-                        color: Color(0xff004040), fontStyle: FontStyle.italic),
+                        color: Color(0xff004040).withOpacity(0.5),
+                        fontSize: 13),
                     focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10),
                       borderSide:
@@ -133,7 +138,8 @@ class _VehicleRegistrationPageState extends State<VehicleRegistrationPage> {
                   decoration: InputDecoration(
                     label: Text(' Enter name'),
                     labelStyle: TextStyle(
-                        color: Color(0xff004040), fontStyle: FontStyle.italic),
+                        color: Color(0xff004040).withOpacity(0.5),
+                        fontSize: 13),
                     focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10),
                       borderSide:
@@ -173,7 +179,8 @@ class _VehicleRegistrationPageState extends State<VehicleRegistrationPage> {
                   decoration: InputDecoration(
                     label: Text(' Enter company'),
                     labelStyle: TextStyle(
-                        color: Color(0xff004040), fontStyle: FontStyle.italic),
+                        color: Color(0xff004040).withOpacity(0.5),
+                        fontSize: 13),
                     focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10),
                       borderSide:
@@ -214,7 +221,8 @@ class _VehicleRegistrationPageState extends State<VehicleRegistrationPage> {
                   decoration: InputDecoration(
                     label: Text(' Enter year'),
                     labelStyle: TextStyle(
-                        color: Color(0xff004040), fontStyle: FontStyle.italic),
+                        color: Color(0xff004040).withOpacity(0.5),
+                        fontSize: 13),
                     focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10),
                       borderSide:
@@ -238,7 +246,7 @@ class _VehicleRegistrationPageState extends State<VehicleRegistrationPage> {
                 ///
                 ///CO2 Per KM///
                 Text(
-                  'CO2 per Km',
+                  'kgCO2 per Km',
                   style: TextStyle(
                     color: Colors.grey.shade600,
                     fontSize: 12,
@@ -255,7 +263,8 @@ class _VehicleRegistrationPageState extends State<VehicleRegistrationPage> {
                   decoration: InputDecoration(
                     label: Text(' Enter value'),
                     labelStyle: TextStyle(
-                        color: Color(0xff004040), fontStyle: FontStyle.italic),
+                        color: Color(0xff004040).withOpacity(0.5),
+                        fontSize: 13),
                     focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10),
                       borderSide:
@@ -279,7 +288,7 @@ class _VehicleRegistrationPageState extends State<VehicleRegistrationPage> {
                 ///
                 ///CO2 Per Mile///
                 Text(
-                  'CO2 per mile',
+                  'kgCO2 per mile',
                   style: TextStyle(
                     color: Colors.grey.shade600,
                     fontSize: 12,
@@ -296,7 +305,8 @@ class _VehicleRegistrationPageState extends State<VehicleRegistrationPage> {
                   decoration: InputDecoration(
                     label: Text(' Enter value'),
                     labelStyle: TextStyle(
-                        color: Color(0xff004040), fontStyle: FontStyle.italic),
+                        color: Color(0xff004040).withOpacity(0.5),
+                        fontSize: 13),
                     focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10),
                       borderSide:
@@ -381,14 +391,34 @@ class _VehicleRegistrationPageState extends State<VehicleRegistrationPage> {
                   height: 25,
                 ),
                 InkWell(
-                  onTap: () {
-                    Navigator.pushNamed(context, HomePage.routeName);
-
+                  onTap: () async {
                     if (_formKey.currentState.validate()) {
                       _formKey.currentState.save();
-                      Navigator.pushNamed(context, HomePage.routeName);
-                    }
+                      Vehicle vehicle = Vehicle(
+                        fuelType: dropDownValue,
+                        make: makeController.text,
+                        company: companyController.text,
+                        registrationNo: registrationNoController.text,
+                        co2Km: double.parse(co2KmController.text),
+                        co2M: double.parse(co2MController.text),
+                        yearOfManufacture: int.parse(manufactureYearController.text),
+                        totalTrips: 0
 
+                      );
+
+                      showDialog(
+                          context: context,
+                          builder: (BuildContext context) => LoadingCard(
+                            text: "Registering New Vehicle",
+                          ));
+                      await FireStoreDatabase.registerNewVehicle(
+                          vehicle, context);
+                      if(!mounted)return;
+                      await FireStoreDatabase.updateTotalVehicles(context);
+                      if(!mounted)return;
+
+                      Navigator.popAndPushNamed(context, HomePage.routeName);
+                    }
                   },
                   child: SignInButton(
                     width: width,

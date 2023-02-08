@@ -1,5 +1,6 @@
 import 'package:control_emission/screens/dashboard_page.dart';
 import 'package:control_emission/screens/vehicles_page.dart';
+import 'package:control_emission/services/auth_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -18,67 +19,75 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
-    return Scaffold(
-      backgroundColor: Color(0xffDDDDDD),
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        actions: [
-          Container(
-            padding: EdgeInsets.symmetric(horizontal: 10),
-            width: width,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Container(
-                  height: 30,
-                  width: 30,
-                  color: Colors.transparent,
-                  child: SvgPicture.asset(
-                    'assets/icons/menu_icon.svg',
+    return WillPopScope(
+      onWillPop: () async => false,
+      child: Scaffold(
+        backgroundColor: Color(0xffDDDDDD),
+        appBar: AppBar(
+          automaticallyImplyLeading: false,
+          actions: [
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: 10),
+              width: width,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Container(
+                    height: 30,
+                    width: 30,
+                    color: Colors.transparent,
+                    child: SvgPicture.asset(
+                      'assets/icons/menu_icon.svg',
+                    ),
                   ),
-                ),
-                SizedBox(
-                  height: 60,
-                  width: 60,
-                  child: Image.asset('assets/images/only_logo.png'),
-                )
-              ],
+                  InkWell(
+                    onTap: () async {
+                      await AuthService().signOut(context);
+                    },
+                    child: SizedBox(
+                      height: 60,
+                      width: 60,
+                      child: Image.asset('assets/images/only_logo.png'),
+                    ),
+                  )
+                ],
+              ),
             ),
-          ),
-        ],
-        elevation: 0,
-        backgroundColor: Color(0xff004040),
-      ),
-      body: _getDrawerItemWidget(_currentIndex),
-      bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
-        currentIndex: _currentIndex,
-        backgroundColor: Colors.white,
-        selectedItemColor: Color(0xff004040),
-        unselectedItemColor: Colors.black,
-        elevation: 1,
-        enableFeedback: true,
-        iconSize: 22,
-        onTap: (value) {
-          setState(() {
-            _currentIndex = value;
-          });
-        },
-        items: const [
-          BottomNavigationBarItem(
-            label: 'Dashboard',
-            icon: Icon(Icons.dashboard_outlined),
-          ),
-          BottomNavigationBarItem(
-            label: 'Vehicles',
-            icon: Icon(CupertinoIcons.car_detailed),
-          ),
-        ],
-        unselectedLabelStyle: TextStyle(
-          fontSize: 8,
+          ],
+          elevation: 0,
+          backgroundColor: Color(0xff004040),
         ),
-        selectedLabelStyle: TextStyle(
-          fontSize: 10,
+        body: _getDrawerItemWidget(_currentIndex),
+        bottomNavigationBar: BottomNavigationBar(
+          type: BottomNavigationBarType.fixed,
+          currentIndex: _currentIndex,
+          backgroundColor: Colors.white,
+          selectedItemColor: Color(0xff004040),
+          unselectedItemColor: Colors.black,
+          elevation: 1,
+          enableFeedback: true,
+          iconSize: 22,
+          onTap: (value) {
+            setState(() {
+              _currentIndex = value;
+            });
+          },
+          items: const [
+            BottomNavigationBarItem(
+              label: 'Dashboard',
+              icon: Icon(Icons.dashboard_outlined),
+            ),
+            BottomNavigationBarItem(
+              label: 'Vehicles',
+              icon: Icon(CupertinoIcons.car_detailed),
+            ),
+          ],
+          unselectedLabelStyle: TextStyle(
+            fontSize: 8,
+          ),
+          selectedLabelStyle: TextStyle(
+            fontSize: 10,
+          ),
         ),
       ),
     );

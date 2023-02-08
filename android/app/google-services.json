@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "140116332751",
+    "project_id": "control-emission",
+    "storage_bucket": "control-emission.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:140116332751:android:950fb996413eac4ec4a7ba",
+        "android_client_info": {
+          "package_name": "com.example.control_emission"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "140116332751-ptcnhr5uua95bt7qov0gnthn520ulqp7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDju6z9WEJciqQ46IB8EjqchfZXY1pUZ4I"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "140116332751-ptcnhr5uua95bt7qov0gnthn520ulqp7.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "140116332751-hkqj42uv6pcl2fv7els40emp6gsqmdj0.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.controlEmission"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
