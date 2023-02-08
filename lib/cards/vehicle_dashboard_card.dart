@@ -31,7 +31,7 @@ class _VehiclesDashboardCardState extends State<VehiclesDashboardCard> {
       stream: _usersStream,
       builder: (BuildContext context, snapshot) {
         if (snapshot.hasError) {
-          return Text('Something went wrong');
+          return Text('${snapshot.error.toString()}');
         }
         if (snapshot.hasData) {
           var userDocument = snapshot.data;

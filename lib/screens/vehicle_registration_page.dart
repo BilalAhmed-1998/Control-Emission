@@ -246,7 +246,7 @@ class _VehicleRegistrationPageState extends State<VehicleRegistrationPage> {
                 ///
                 ///CO2 Per KM///
                 Text(
-                  'CO2 per Km',
+                  'kgCO2 per Km',
                   style: TextStyle(
                     color: Colors.grey.shade600,
                     fontSize: 12,
@@ -288,7 +288,7 @@ class _VehicleRegistrationPageState extends State<VehicleRegistrationPage> {
                 ///
                 ///CO2 Per Mile///
                 Text(
-                  'CO2 per mile',
+                  'kgCO2 per mile',
                   style: TextStyle(
                     color: Colors.grey.shade600,
                     fontSize: 12,

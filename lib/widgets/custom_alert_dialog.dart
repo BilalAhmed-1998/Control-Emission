@@ -84,7 +84,7 @@ class CustomAlertDialog extends StatelessWidget {
                 size: 14,
               ),
               Text(
-                '  CO2 Emission per Mile : ${vehicle.co2M}',
+                '  kgCO2 Emission per Mile : ${vehicle.co2M}',
                 style: TextStyle(
                     color: Colors.grey.shade800, fontSize: 14, height: 2),
               )
@@ -98,7 +98,7 @@ class CustomAlertDialog extends StatelessWidget {
                 size: 14,
               ),
               Text(
-                '  CO2 Emission per KM : ${vehicle.co2Km}',
+                '  kgCO2 Emission per KM : ${vehicle.co2Km}',
                 style: TextStyle(
                     color: Colors.grey.shade800, fontSize: 14, height: 2),
               )

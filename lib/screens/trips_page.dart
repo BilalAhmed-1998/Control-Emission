@@ -1,7 +1,6 @@
 import 'package:control_emission/classes/Vehicle.dart';
 import 'package:control_emission/classes/trip.dart';
 import 'package:control_emission/screens/trip_detail_page.dart';
-import 'package:control_emission/services/geo_service.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';

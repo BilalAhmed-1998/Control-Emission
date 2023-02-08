@@ -3,7 +3,6 @@ import 'package:control_emission/services/firestore_database.dart';
 import 'package:control_emission/widgets/signin_button.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../cards/loading_card.dart';
 import '../services/auth_service.dart';

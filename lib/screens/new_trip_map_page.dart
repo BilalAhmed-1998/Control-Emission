@@ -1,11 +1,8 @@
 import 'dart:async';
 import 'dart:ui';
-import 'dart:math';
 
 import 'package:control_emission/services/geo_service.dart';
-import 'package:maps_toolkit/maps_toolkit.dart' as map_tool;
 import 'package:control_emission/classes/trip.dart';
-import 'package:control_emission/data.dart';
 import 'package:control_emission/screens/home_page.dart';
 import 'package:control_emission/services/firestore_database.dart';
 import 'package:control_emission/widgets/custom_confirmation_dialog.dart';

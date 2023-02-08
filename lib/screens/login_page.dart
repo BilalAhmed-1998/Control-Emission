@@ -32,7 +32,6 @@ class _LoginPageState extends State<LoginPage> {
       body: SingleChildScrollView(
         child: Container(
           width: width,
-          height: height,
           padding: EdgeInsets.symmetric(horizontal: 25, vertical: 40),
           color: Colors.white,
           child: Column(

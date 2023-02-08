@@ -1,5 +1,4 @@
 import 'package:control_emission/screens/home_page.dart';
-import 'package:control_emission/screens/vehicle_registration_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
